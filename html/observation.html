@@ -86,11 +86,33 @@
     </div>
     <!--End of sidebar messages-->
     <main>
+        <!--Modal temperature-->
+        <div class="modal fade" id="tempModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="tempModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="tempModalLabel">Температура</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="36.6">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" onclick="addTemp()"
+                            data-bs-dismiss="modal">Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End of modal-->
+        <!--Temperature-->
         <div class="container">
             <div class="row">
                 <div class="col-1">
                     <!--Plus temperature-->
-                    <a href="#">
+                    <a data-bs-toggle="modal" href="#tempModal" role="button" aria-controls="tempModal">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                             class="bi bi-plus-circle" viewBox="0 0 16 16">
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
@@ -105,64 +127,85 @@
                 </div>
             </div>
         </div>
-
+        <!--End of temperature-->
+        <!--Blood pressure-->
+        <div class="container">
+            <div class="col-1">
+                <!--Plus blood pressure-->
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                </a>
+            </div>
+            <div class="col-11">
+                <!--Blood pressure table-->
+            </div>
+        </div>
+        <!--End of blood pressure-->
     </main>
-    <script src="https://unpkg.com/moment@2.29.1/moment.js"></script>
+    <!--Script for chart-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"
+        integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ=="
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/ru.min.js"
+        integrity="sha512-+yvkALwyeQtsLyR3mImw8ie79H9GcXkknm/babRovVSTe04osQxiohc1ukHkBCIKQ9y97TAf2+17MxkIimZOdw=="
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"
         integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw=="
         crossorigin="anonymous"></script>
 
     <script>
-        (function () {
-            'use strict'
-
-            var ctx = document.getElementById('myChart');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    datasets: [{
-                        data: [
-                            { x: '2018-03-31', y: 36.7 },
-                            { x: '2018-03-31', y: 37.8 },
-                            { x: '2018-04-05', y: 36.6 },
-                            { x: '2018-04-08', y: 35.5 },
-                            { x: '2018-04-16', y: 36.6 },
-                            { x: '2018-04-17', y: 36.8 },
-                        ],
-                        lineTension: 0.1,
-                        borderColor: '#007bff',
-                        borderWidth: 4,
-                        pointBackgroundColor: '#007bff'
+        console.log(moment());
+        console.log(moment().add(14, 'days'));
+        var ctx = document.getElementById('myChart');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                datasets: [{
+                    data: [],
+                    lineTension: 0.1,
+                    borderColor: '#007bff',
+                    borderWidth: 4,
+                    pointBackgroundColor: '#007bff'
+                }]
+            },
+            options: {
+                legend: false,
+                scales: {
+                    xAxes: [{
+                        type: 'time',
+                        ticks: {
+                            suggestedMin: moment(),
+                            suggestedMax: moment().add(14, 'days'),
+                            source: 'data'
+                        }
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            suggestedMin: 35.0,
+                            suggestedMax: 42.0
+                        }
                     }]
-                },
-                options: {
-                    legend: false,
-                    scales: {
-                        xAxes: [{
-                            type: 'time',
-                            ticks: {
-                                min: '2018-03-29',
-                                max: '2018-04-26',
-                                unit: 'day'
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                suggestedMin: 35.1,
-                                suggestedMax: 41.9
-                            }
-                        }]
-                    }
-
                 }
-            });
-            
+
+            }
+        });
+
+        function addTemp() {
+            var input = document.getElementById('floatingInput');
+            var res = parseFloat(input.value);
+            input.value = "";
+            if (isNaN(res)) return;
             myChart.data.datasets[0].data.push({
-                x: '2018-04-26',
-                y: 37.1
+                x: moment(),
+                y: res
             });
             myChart.update();
-        })();
+        };
     </script>
 </body>
 
